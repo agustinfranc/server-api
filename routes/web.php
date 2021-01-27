@@ -14,3 +14,14 @@ use Ndum\Laravel\Facades\Snmp;
 |
 */
 
+// Route::get('/', function () {
+    // return view('welcome');
+
+    // $snmp = Snmp::newClient('127.0.0.1', 1, 'public');
+
+    // $process = $snmp->getValue('1.3.6.1.2.1.25.1.6.0');  //Procesos
+
+    // $session = $snmp->getValue('1.3.6.1.2.1.25.1.5.0');  //Sesiones
+
+    // dd($result);
+// });
