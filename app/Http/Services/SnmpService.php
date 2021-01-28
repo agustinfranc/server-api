@@ -20,6 +20,6 @@ class SnmpService
         return [
             'process' => $process,
             'session' => $session,
-        ]
+        ];
     }
 }
