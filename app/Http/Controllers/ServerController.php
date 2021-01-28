@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repositories\ServerRepository;
 use App\Models\Server;
 use Illuminate\Http\Request;
 
@@ -25,20 +26,7 @@ class ServerController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'ip' => 'required',
-            'host' => 'required',
-            'description' => 'max:255',
-            'avatar' => 'max:255',
-        ]);
-
-        $server = new Server();
-
-        $server->fill($validatedData);
-
-        $server->saveOrFail();
-
-        return Server::with('requests')->find($server->id);
+		return ServerRepository::save($request);
     }
 
     /**
@@ -61,18 +49,7 @@ class ServerController extends Controller
      */
     public function update(Request $request, Server $server)
     {
-        $validatedData = $request->validate([
-            'ip' => 'required',
-            'host' => 'required',
-            'description' => 'max:255',
-            'avatar' => 'max:255',
-        ]);
-
-        $server->fill($validatedData);
-
-        $server->saveOrFail();
-
-        return Server::with('requests')->find($server->id);
+		return ServerRepository::save($request, $server);
     }
 
     /**
