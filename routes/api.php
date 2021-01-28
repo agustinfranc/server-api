@@ -17,4 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('servers', ServerController::class);
 
-Route::post('/servers/{server}/upload', [ServerController::class, 'upload'])->name('servers.upload');
+Route::prefix('/servers')->group(function () {
+    Route::post('/{server}/upload', [ServerController::class, 'upload'])->name('servers.upload');
+
+    Route::post('/{server}/request', [ServerController::class, 'request'])->name('servers.request');
+});
