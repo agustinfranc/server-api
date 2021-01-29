@@ -17,8 +17,9 @@ class CreateServersTable extends Migration
             $table->increments('id');
             $table->string('ip', 50);
             $table->string('host', 50);
-            $table->string('description')->nullable();
+            $table->string('description', 200)->nullable();
             $table->string('avatar')->nullable();
+            $table->unsignedInteger('sort')->default(0);
             $table->timestamps();
         });
     }

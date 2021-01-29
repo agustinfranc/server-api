@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repositories\ServerRepository;
+use App\Http\Services\SnmpService;
+use App\Models\Request as ModelsRequest;
 use App\Models\Server;
 use Illuminate\Http\Request;
 
@@ -24,9 +26,9 @@ class ServerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, ServerRepository $repository)
     {
-        return ServerRepository::save($request);
+        return $repository::save($request);
     }
 
     /**
@@ -47,9 +49,9 @@ class ServerController extends Controller
      * @param  \App\Models\Server  $server
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Server $server)
+    public function update(Request $request, Server $server, ServerRepository $repository)
     {
-        return ServerRepository::save($request, $server);
+        return $repository::save($request, $server);
     }
 
     /**
@@ -61,6 +63,19 @@ class ServerController extends Controller
     public function destroy(Server $server)
     {
         return response($server->delete());
+    }
+
+    /**
+     * Order servers by updating sort column
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function sort(Request $request, ServerRepository $repository)
+    {
+        $servers = $request->post('servers');
+
+        return $repository::sort($servers);
     }
 
     /**
@@ -83,5 +98,33 @@ class ServerController extends Controller
         $server->saveOrFail();
 
         return Server::with('requests')->find($server->id);
+    }
+
+    /**
+     * Request to server
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Server  $server
+     * @return \Illuminate\Http\Response
+     */
+    public function request(Request $request, Server $server)
+    {
+        // $snmpService = new SnmpService($server->ip);
+
+        // $snmpRequest = $snmpService->getRequest();
+
+
+        $modelsRequest = new ModelsRequest();
+
+        $snmpRequest = [
+            'process' => 1,
+            'session' => 4,
+        ];
+
+        $modelsRequest->fill($snmpRequest);
+
+        $server->requests()->save($modelsRequest);
+
+        return $snmpRequest;
     }
 }

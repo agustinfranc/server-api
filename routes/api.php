@@ -21,4 +21,6 @@ Route::prefix('/servers')->group(function () {
     Route::post('/{server}/upload', [ServerController::class, 'upload'])->name('servers.upload');
 
     Route::post('/{server}/request', [ServerController::class, 'request'])->name('servers.request');
+
+    Route::put('/order', [ServerController::class, 'sort'])->name('servers.order');
 });
