@@ -17,7 +17,7 @@ class ServerController extends Controller
      */
     public function index()
     {
-        return Server::with('requests')->get();
+        return Server::with('requests')->orderBy('sort')->get();
     }
 
     /**
