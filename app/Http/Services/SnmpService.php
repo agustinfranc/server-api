@@ -8,8 +8,8 @@ class SnmpService
 {
     private $_snmp;
 
-    public function __construct() {
-        $this->_snmp = Snmp::newClient('127.0.0.1', 1, 'public');
+    public function __construct(string $ip = '127.0.0.1') {
+        $this->_snmp = Snmp::newClient($ip, 1, 'public');
     }
 
     public function getRequest() {
