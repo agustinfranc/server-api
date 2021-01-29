@@ -2,7 +2,10 @@
 
 namespace App\Http\Repositories;
 
+use App\Models\Request as ModelsRequest;
 use App\Models\Server;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class ServerRepository
@@ -40,5 +43,35 @@ class ServerRepository
 
             $server->saveOrFail();
         }
+    }
+
+    public static function getOne($server): Server
+    {
+        $now = Carbon::now()->timestamp;
+
+        $unixTimestamp = (int) round($now / 60);
+
+        $requests = [];
+
+        for ($i = 0; $i < 6; $i++) {
+            $rawQuery = ModelsRequest::selectRaw('SUM(process) as process, SUM(session) as session, UNIX_TIMESTAMP(created_at) DIV 60 as group_date')
+                ->whereServerId($server->id)
+                ->whereRaw('UNIX_TIMESTAMP(created_at) DIV 60 = ' . $unixTimestamp)
+                ->groupBy('group_date')
+                ->get();
+
+            array_push($requests, $rawQuery);
+
+            $unixTimestamp--;
+        }
+
+        $server->requests = $requests;
+
+        return $server;
+    }
+
+    public static function getAll(): Collection
+    {
+        return Server::orderBy('sort')->get();
     }
 }

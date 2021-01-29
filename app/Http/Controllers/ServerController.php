@@ -15,9 +15,9 @@ class ServerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ServerRepository $repository)
     {
-        return Server::with('requests')->orderBy('sort')->get();
+        return $repository::getAll();
     }
 
     /**
@@ -37,9 +37,9 @@ class ServerController extends Controller
      * @param  \App\Models\Server  $server
      * @return \Illuminate\Http\Response
      */
-    public function show(Server $server)
+    public function show(Server $server, ServerRepository $repository)
     {
-        return Server::with('requests')->find($server->id);
+        return $repository::getOne($server);
     }
 
     /**
