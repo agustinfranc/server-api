@@ -109,17 +109,11 @@ class ServerController extends Controller
      */
     public function request(Request $request, Server $server)
     {
-        // $snmpService = new SnmpService($server->ip);
+        $snmpService = new SnmpService($server->ip);
 
-        // $snmpRequest = $snmpService->getRequest();
-
+        $snmpRequest = $snmpService->getRequest();
 
         $modelsRequest = new ModelsRequest();
-
-        $snmpRequest = [
-            'process' => 1,
-            'session' => 4,
-        ];
 
         $modelsRequest->fill($snmpRequest);
 
