@@ -47,22 +47,35 @@ class ServerRepository
 
     public static function getOne($server): Server
     {
+        $intervalScale = 60;
+        $intervalNumber = 7;
+
         $now = Carbon::now()->timestamp;
 
-        $unixTimestamp = (int) round($now / 60);
+        $interval = (int) round($now / $intervalScale);
+
+        $interval -= $intervalNumber;
 
         $requests = [];
 
-        for ($i = 0; $i < 6; $i++) {
-            $rawQuery = ModelsRequest::selectRaw('SUM(process) as process, SUM(session) as session, UNIX_TIMESTAMP(created_at) DIV 60 as group_date')
+        for ($i = 0; $i < $intervalNumber; $i++) {
+            $request = ModelsRequest::selectRaw('SUM(process) as process, SUM(session) as session, UNIX_TIMESTAMP(created_at) DIV ' . $intervalScale . ' as timestamp')
                 ->whereServerId($server->id)
-                ->whereRaw('UNIX_TIMESTAMP(created_at) DIV 60 = ' . $unixTimestamp)
-                ->groupBy('group_date')
-                ->get();
+                ->whereRaw('UNIX_TIMESTAMP(created_at) DIV ' . $intervalScale . ' = ' . $interval)
+                ->groupBy('timestamp')
+                ->first();
 
-            array_push($requests, $rawQuery);
+            if (!$request) {
+                array_push($requests, [
+                    'process' => 0,
+                    'session' => 0,
+                    'timestamp' => $interval,
+                ]);
+            } else {
+                array_push($requests, $request);
+            }
 
-            $unixTimestamp--;
+            $interval++;
         }
 
         $server->requests = $requests;
