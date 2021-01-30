@@ -59,7 +59,7 @@ class ServerRepository
         $requests = [];
 
         for ($i = 0; $i < $intervalNumber; $i++) {
-            $request = ModelsRequest::selectRaw('SUM(process) as process, SUM(session) as session, UNIX_TIMESTAMP(created_at) DIV ' . $intervalScale . ' as timestamp')
+            $request = ModelsRequest::selectRaw('AVG(process) as process, AVG(session) as session, UNIX_TIMESTAMP(created_at) DIV ' . $intervalScale . ' as timestamp')
                 ->whereServerId($server->id)
                 ->whereRaw('UNIX_TIMESTAMP(created_at) DIV ' . $intervalScale . ' = ' . $interval)
                 ->groupBy('timestamp')
