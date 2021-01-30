@@ -47,6 +47,10 @@ class ServerRepository
 
     public static function getOne($server): Server
     {
+        if (!$server) {
+            abort(400, 'Internal error.');
+        }
+
         $intervalScale = 60;
         $intervalNumber = 7;
 
