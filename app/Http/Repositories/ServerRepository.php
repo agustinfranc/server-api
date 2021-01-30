@@ -69,7 +69,7 @@ class ServerRepository
                 array_push($requests, [
                     'process' => 0,
                     'session' => 0,
-                    'timestamp' => $interval,
+                    'timestamp' => $interval * $intervalScale,
                 ]);
             } else {
                 array_push($requests, $request);
@@ -79,6 +79,8 @@ class ServerRepository
         }
 
         $server->requests = $requests;
+        $server->intervalScale = $intervalScale;
+        $server->intervalNumber = $intervalNumber;
 
         return $server;
     }
