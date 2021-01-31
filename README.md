@@ -12,6 +12,8 @@ set env variables based on .env.example
 # create database and set name into .env
 
 # set timezone to BuenosAires in MySQL
+SELECT now(); displays current timedate
+/mysql/my.cnf -> default-time-zone = "-03:00"
 
 # migrate and seed
 php artisan migrate --seed
